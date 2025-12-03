@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Service 1: The App
+  drift-app:
+    build: ./app
+    ports:
+      - "8000:8000"
+    container_name: drift-app
+
+  # Service 2: The Collector
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    container_name: prometheus
+
+  # Service 3: The Dashboard (NEW)
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus # Wait for Prometheus to start first
+    container_name: grafana
